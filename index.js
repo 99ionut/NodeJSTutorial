@@ -1,16 +1,8 @@
-const EventEmitter = require('events');
-const customEmitter = new EventEmitter();
+const {writeFileSync, readFileSync, createReadStream} = require('fs');
 
-customEmitter.on('messaggio', (nome,anno)=>{
-    console.log("sono partito, evento manda messaggio "+nome+" e "+anno);
+const stream = createReadStream("./filegrande.txt");
+
+//file passato in chunk assestanti non un solo chunk come readFileSync
+stream.on("data", (result)=>{
+    console.log(result);
 })
-
-customEmitter.on('messaggio', (nome)=>{
-    console.log("evento, manda notifica "+nome);
-})
-
-customEmitter.on('messaggio', ()=>{
-    console.log("evento vuoto");
-})
-
-customEmitter.emit("messaggio", "ionut", 2024);
