@@ -1,8 +1,16 @@
-const {writeFileSync, readFileSync, createReadStream} = require('fs');
+const express = require('express')
+const app = express()
 
-const stream = createReadStream("./filegrande.txt");
-
-//file passato in chunk assestanti non un solo chunk come readFileSync
-stream.on("data", (result)=>{
-    console.log(result);
+app.get('/', (req, res) => {
+  res.send('Hello World')
 })
+
+app.get('/about', (req, res) => {
+    res.send('Risorsa About')
+  })
+
+app.all("*", (req, res)=>{
+    res.send("risorsa non trovata");
+});
+
+app.listen(3000)
