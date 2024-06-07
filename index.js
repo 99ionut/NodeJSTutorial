@@ -1,18 +1,9 @@
 const express = require('express')
 const app = express()
+const persone = require('./persone');
 
-app.use(express.static("public"))
-
-app.get('/', (req, res) => {
-  res.sendFile("homepage.html", {root: __dirname+"/public"})
+app.get("/", (req, res) =>{
+    res.json(persone);
 })
 
-app.get('/about', (req, res) => {
-    res.sendFile("about.html", {root: __dirname+"/public"})
-})
-
-app.all("*", (req, res)=>{
-    res.send("risorsa non trovata");
-});
-
-app.listen(3000)
+app.listen(3000);
