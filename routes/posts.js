@@ -9,15 +9,9 @@ let posts = [
     { id: 5, title: "post 5" },
 ];
 
-//middleware, before reaching the router with request
-//next calls the next function in the middleware stack
-const logger = (req, res, next) => {
-    console.log(`the req is: ${req.method} ${req.protocol}://${req.get('host')}${req.originalUrl} `);
-    next();
-}
 
 //get posts http://localhost:8000/api/posts/
-router.get("/", logger, (req, res) => {
+router.get("/", (req, res) => {
     //http://localhost:8000/api/posts?limit=3
     const limit = parseInt(req.query.limit);
     if (!isNaN(limit) && limit > 0) {
