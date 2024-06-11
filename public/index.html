@@ -6,6 +6,56 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>welcome</h1>
+    <h1>post</h1>
+    <button id="get-post-btn">Get Post</button>
+    <div id="output"></div>
+
+    <h2>form</h2>
+    <form id="add-post-form">
+        <label>Title:</label>
+        <input type="text" id="title">
+        <button type="submit">Submit</button>
+    </form>
+
+
+    <script>
+        const output = document.querySelector("#output");
+        const button = document.querySelector("#get-post-btn");
+
+        //get all posts
+        async function showPosts() {
+            output.innerHTML = "";
+            const res = await fetch("http://localhost:8000/api/posts");
+            if(!res.ok){
+                throw new Error("Failed to fetch post");
+            }
+
+            const posts = await res.json();
+           
+            posts.forEach(post => {
+                output.innerHTML = output.innerHTML +" "+post.title+" ";
+            });
+        }
+
+        //submit new post
+        async function addPost(e){
+            e.preventDefault();
+            let title = document.querySelector("#title").value;
+
+            const res = await fetch("http://localhost:8000/api/posts", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify({title})
+            })
+
+            const output = document.querySelector("#output");
+            output.innerHTML = output.innerHTML +" "+title+" "; 
+        }
+        
+        document.getElementById("add-post-form").addEventListener("submit",addPost);
+        button.addEventListener("click", showPosts);
+    </script>
 </body>
 </html>
