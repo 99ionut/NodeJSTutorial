@@ -5,6 +5,10 @@ const posts = require("./routes/posts");
 
 const app = express();
 
+//Body parser middelware
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+
 //Routes
 app.use("/api/posts", posts);
 

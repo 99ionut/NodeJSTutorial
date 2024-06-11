@@ -32,4 +32,19 @@ router.get("/:id", (req, res) => {
     return res.status(200).json(post);
 });
 
+//post
+router.post("/", (req,res)=>{
+    const newPost = {
+        id: posts.length + 1,
+        title: req.body.title
+    }
+
+    if(!newPost.title){
+        return res.status(400).json({msg: "add title"});
+    }
+
+    posts.push(newPost)
+    res.status(201).json(posts);
+});
+
 module.exports = router;
