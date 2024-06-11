@@ -4,6 +4,7 @@ const port = process.env.PORT || 8000;
 const posts = require("./routes/posts");
 const logger = require('./middleware/logger');
 const errorHandler = require('./middleware/error');
+const notFound = require('./middleware/notFound');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/api/posts", posts);
 
 
 //error handler
+app.use(notFound);
 app.use(errorHandler);
 
 app.listen(port, () => console.log(`server is running on port ${port}`));
