@@ -22,26 +22,30 @@ router.get("/", (req, res) => {
 });
 
 //get a single posts http://localhost:8000/api/posts/1
-router.get("/:id", (req, res) => {
+router.get("/:id", (req, res, next) => {
     const id = parseInt(req.params.id);
 
     const post = posts.find((post) => post.id === id);
     if (!post) {
-        res.status(404).json({ msg: `post with id of ${id} wasnt found` });
+        const error = new Error(`post with id of ${id} wasnt found`);
+        error.status = 505;
+        return next(error);
     }
 
     return res.status(200).json(post);
 });
 
 //post
-router.post("/", (req,res)=>{
+router.post("/", (req,res, next)=>{
     const newPost = {
         id: posts.length + 1,
         title: req.body.title
     }
 
     if(!newPost.title){
-        return res.status(400).json({msg: "add title"});
+        const error = new Error(`add a title `);
+        error.status = 405;
+        return next(error);
     }
 
     posts.push(newPost)
@@ -49,12 +53,14 @@ router.post("/", (req,res)=>{
 });
 
 //put
-router.put("/:id", (req,res)=>{
+router.put("/:id", (req,res, next)=>{
     const id = parseInt(req.params.id);
     const post = posts.find((post) => post.id === id);
 
     if(!post){
-        return res.status(404).json({msg: "no id found"});
+        const error = new Error(`no id found`);
+        error.status = 507;
+        return next(error);
     }
 
     post.title = req.body.title;
@@ -63,12 +69,14 @@ router.put("/:id", (req,res)=>{
 
 
 //delete
-router.delete("/:id", (req,res)=>{
+router.delete("/:id", (req,res, next)=>{
     const id = parseInt(req.params.id);
     const post = posts.find((post) => post.id === id);
 
     if(!post){
-        return res.status(404).json({msg: "no id found"});
+        const error = new Error(`no id found`);
+        error.status = 507;
+        return next(error);
     }
 
     posts = posts.filter((post) => post.id !== id);
