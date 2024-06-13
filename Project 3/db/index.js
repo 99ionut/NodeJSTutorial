@@ -4,8 +4,8 @@ const pool = new pg.Pool({
     host:"localhost",
     user:"postgres",
     port: 5432,
-    password:"xxx",
-    database:"xxx"
+    password:"xx",
+    database:"xx"
 })
 
 const query = (text, params, callback) => {

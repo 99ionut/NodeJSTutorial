@@ -11,8 +11,17 @@ router.get("/:id", posts.getPost);
 router.post("/", posts.createPost);
 
 //put
-router.put("/:id", posts.updatePost);
+router.put("/:id/text/", posts.updateText);
 
+//put
+router.put("/:id/isEditing/", posts.updateIsEditing);
+
+//put
+router.put("/:id/isCompleted/", posts.updateIsCompleted);
+
+
+//put
+router.put("/:id", posts.updatePost);
 
 //delete
 router.delete("/:id", posts.deletePost);
