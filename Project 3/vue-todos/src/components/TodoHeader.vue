@@ -2,28 +2,23 @@
 import {RouterLink} from "vue-router";
 </script>
 <template lang="">
-    <header>
-        <nav class="container">
+    <div class="bg-accent flex text-primary justify-center shadow-lg">
+        <div class="flex p-2 items-center w-10/12">
             <div class="branding">
-                <img src="../assets/Vue_Logo_Black.png" alt="">
-                <h1>Vue Todos</h1>
+                <h1 class="font-bold">NodeJs+Vue app</h1>
             </div>
             <ul class="nav-routes">
-                <RouterLink to="/">Home</RouterLink>
+                <RouterLink class="text-white hover:text-black" to="/">Home</RouterLink>
                 <RouterLink to="/about">about</RouterLink>
             </ul>
-        </nav>
-    </header>
+          </div>
+        </div>
 </template>
 
 
 <style lang="scss" scoped>
-header {
-  background-color: #f1f1f1;
-  nav {
-    display: flex;
-    align-items: center;
-    padding: 25px 16px;
+div {
+  div {
 
     .branding {
       display: flex;

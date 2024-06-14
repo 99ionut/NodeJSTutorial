@@ -4,7 +4,7 @@
 </script>
 
 <template>
-    <button>
+    <button class="btn text-white btn-info rounded-none">
         <slot>
             <!--fallback if we dont add anything-->
             Create

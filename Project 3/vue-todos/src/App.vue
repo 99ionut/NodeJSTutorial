@@ -4,23 +4,18 @@ import TodoHeader from "./components/TodoHeader.vue";
 </script>
 
 <template>
-  <TodoHeader/>
-  <RouterView />
-  
+  <div id="bg" class="bg-neutral min-h-screen flex flex-col">
+    <TodoHeader />
+    <RouterView />
+  </div>
 </template>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap");
 
-* {
-  font-family: "Rubik", sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
+#bg{
+  
+ background-size: 40px 40px;
+  background-image: linear-gradient(#e5e9ed 1.6px, transparent 1.6px), linear-gradient(to right, #e5e9ed 1.6px, #f3f3f3 1.6px);
 }
 </style>

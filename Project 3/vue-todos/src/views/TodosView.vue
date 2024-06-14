@@ -1,6 +1,5 @@
 <script setup>
 import { ref, watch, computed} from 'vue'
-import {uid} from "uid";
 import { Icon } from "@iconify/vue";
 import TodoCreator from '../components/TodoCreator.vue'
 import TodoItem from '../components/TodoItem.vue'
@@ -15,7 +14,7 @@ watch(todoList,(newValue,oldValue)=>{
 });
 
 const todoCompleted = computed(() =>{
-  return todoList.value.every((todo)=> todo.isComplete);
+  return todoList.value.every((todo)=> todo.iscompleted);
 })
 
 const fetchTodoList = async() => {
@@ -110,7 +109,7 @@ const toggleEditTodo = async(todoId,todoPosition) => {
 }
 
 const updateText = async(todoText,todoId,todoPosition) => {
-  todoList.value[todoPosition].todo = todoText;
+  todoList.value[todoPosition].text = todoText;
 
   const res = await fetch("http://localhost:8000/api/posts/"+todoId+"/text", {
       method: "PUT",
@@ -140,10 +139,11 @@ const deleteTodo = async(todoId) => {
 </script>
 
 <template>
-  <main>
-    <p class="underline">Create Todo</p>
+  <main class="py-10 w-full flex justify-center ">
+    <div class="container bg-primary p-5 rounded-2xl  w-6/12 shadow-2xl shadow-black">
+    <p class="font-bold text-2xl text-center pb-4">Create Todo</p>
     <TodoCreator @create-todo="createTodo"/>
-    <ul class="todo-list">
+    <div class="flex flex-col">
       <TodoItem 
         :key="todo.id"
         v-for="(todo, index) in todoList" 
@@ -155,40 +155,18 @@ const deleteTodo = async(todoId) => {
         @delete-todo="deleteTodo"
         @update-todo-text="updateText"
         />
-    </ul>
-    <p v-if="todoList.length == 0" class="todos-msg">
-      <span>you have no todos</span>
+    </div>
+    <p v-if="todoList.length == 0" class="text-center pt-3">
+      <span>you have no todos!</span>
     </p>
-    <p v-if="todoCompleted && todoList.length > 0" class="todos-msg">
+    <p v-if="todoCompleted && todoList.length > 0" class="text-center pt-3">
       <span>Congratulations! you completed all todos!</span>
     </p>
+  </div>
   </main>
+
 </template>
 
 <style scoped lang="scss">
-main {
-  display: flex;
-  flex-direction: column;
-  max-width: 500px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 40px 16px;
 
-
-  .todo-list {
-    display: flex;
-    flex-direction: column;
-    list-style: none;
-    margin-top: 24px;
-    gap: 20px;
-  }
-
-  .todos-msg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 24px;
-  }
-}
 </style>
