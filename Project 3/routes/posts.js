@@ -1,29 +1,65 @@
 const express = require("express");
 const router = express.Router();
-const posts = require('../controllers/postController');
+const db = require("../db/index");
 
-router.get("/", posts.getPosts);
+router.get("/", async (req, res, next) => {
+    
+    const result = await db.query(`SELECT * FROM "TodoListDB" ORDER BY id ASC`, []);
+    res.status(200).send(result.rows);
+});
 
-
-router.get("/:id", posts.getPost);
 
 //post
-router.post("/", posts.createPost);
+router.post("/", async(req, res, next) => {
+    
+    let result = await db.query(`INSERT INTO "TodoListDB" (text, isCompleted, isEditing) VALUES ($1,false,false) RETURNING *`, [
+        req.body.value
+    ]);
+    //return the id
+    console.log(result.rows[0]);
+
+    res.json(result.rows[0].id);
+});
 
 //put
-router.put("/:id/text/", posts.updateText);
+router.put("/:id/text/", async(req, res, next) => {
+    const id = parseInt(req.params.id);
+    const result = await db.query(`UPDATE "TodoListDB" SET text = $1 WHERE id = $2`, [
+    req.body.value, id
+    ]);
+
+    res.status(200).json(result);
+});
 
 //put
-router.put("/:id/isEditing/", posts.updateIsEditing);
+router.put("/:id/isediting/", async(req, res, next) => {
+    const id = parseInt(req.params.id);   
+    const result = await db.query(`UPDATE "TodoListDB" SET isediting = $1 WHERE id = $2`, [
+        req.body.value, id
+    ]);
+    
+    res.status(200).json(result);
+});
 
 //put
-router.put("/:id/isCompleted/", posts.updateIsCompleted);
+router.put("/:id/iscompleted/", async(req, res, next) => {
+    const id = parseInt(req.params.id);   
+    const result = await db.query(`UPDATE "TodoListDB" SET iscompleted = $1 WHERE id = $2`, [
+        req.body.value, id
+    ]);
+    
+    res.status(200).json(result);
+});
 
-
-//put
-router.put("/:id", posts.updatePost);
 
 //delete
-router.delete("/:id", posts.deletePost);
+router.delete("/:id", async(req, res, next) => {
+    const id = parseInt(req.params.id);
+    const result = await db.query(`DELETE FROM "TodoListDB" WHERE id = $1`, [
+        id
+    ]);
+
+    res.status(200).json(result);
+});
 
 module.exports = router;

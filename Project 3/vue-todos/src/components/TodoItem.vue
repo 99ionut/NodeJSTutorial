@@ -1,5 +1,6 @@
 <script setup>
 import { Icon } from "@iconify/vue";
+import { onMounted } from 'vue'
 
 const props = defineProps({
     todo: {
@@ -10,36 +11,37 @@ const props = defineProps({
     }
 });
 
+
 defineEmits(["toggle-complete", "edit-todo", "update-todo","delete-todo","update-todo-text"]);
 </script>
 
 <template lang="">
     <li>
         <input type="checkbox" 
-            :checked="todo.isCompleted" 
-            @input="$emit('toggle-complete',index)"
+            :checked="todo.iscompleted" 
+            @input="$emit('toggle-complete',todo.id,index)"
         />
         <div class="todo">
             <input 
-                v-if="todo.isEditing" 
-                @input="$emit('update-todo-text', $event.target.value, index)" 
+                v-if="todo.isediting" 
+                @input="$emit('update-todo-text', $event.target.value, todo.id, index)" 
                 type="text" 
-                :value="todo.todo"
+                :value="todo.text"
             />
-            <span v-else :class="{'completed-todo': todo.isComplete}">
-                {{todo.todo}}
+            <span v-else :class="{'completed-todo': todo.iscompleted}">
+                {{todo.text}}
             </span>   
         </div>
         <div class="todo-actions">
             <Icon 
-                v-if="todo.isEditing" 
-                @click="$emit('edit-todo',index)" 
+                v-if="todo.isediting"
+                @click="$emit('edit-todo',todo.id,index)" 
                 icon="ph:check-circle" class="icon check-icon" color="41b080" width="22"/>
             <Icon v-else 
-                @click="$emit('edit-todo',index)" 
+                @click="$emit('edit-todo',todo.id,index)" 
                 icon="ph:pencil-fill" class="icon edit-icon" color="41b080" width="22" />
             <Icon 
-                @click="$emit('delete-todo',todo.id)" 
+                @click="$emit('delete-todo',todo.id,index)" 
                 icon="ph:trash" class="icon trash-icon" color="f95e5e" width="22" />
         </div>
     </li>

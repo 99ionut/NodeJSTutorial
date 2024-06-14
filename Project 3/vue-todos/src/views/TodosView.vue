@@ -20,11 +20,12 @@ const todoCompleted = computed(() =>{
 
 const fetchTodoList = async() => {
   //get all posts
+    
     const res = await fetch("http://localhost:8000/api/posts");
     if(!res.ok){
         throw new Error("Failed to fetch post");
     }
-
+    console.log(res);
     const posts = await res.json();
     console.log(posts);
     todoList.value = posts;
@@ -35,14 +36,14 @@ const fetchTodoList = async() => {
 const setTodoListLocalStorage = async() => {
     let text = "aa";
     let isCompleted = true;
-    let isEditing = true;
+    let isediting = true;
 
     const res = await fetch("http://localhost:8000/api/posts", {
         method: "POST",
         headers: {
             "Content-type": "application/json"
         },
-        body: JSON.stringify({text,isCompleted,isEditing})
+        body: JSON.stringify({text,isCompleted,isediting})
     })
 }
 
@@ -58,39 +59,60 @@ const createTodo = async(todo) =>{
           "Content-type": "application/json"
       },
       body: JSON.stringify({"value":todo})
-  })
+  });
+
+  
+  const insertId = await res.json();
+ 
+  todoList.value.push({
+    id: insertId,
+    text: todo,
+    isCompleted: null,
+    isEditing: null,
+  });
 }
 
-const toggleTodoComplete = async(todoPosition) =>{
-  todoList.value[todoPosition].isCompleted = !todoList.value[todoPosition].isCompleted;
-  let newVal = todoList.value[todoPosition].isCompleted;
-  const res = await fetch("http://localhost:8000/api/posts/"+todoPosition+"/isCompleted", {
+const toggleTodoComplete = async(todoId,todoPosition) =>{
+  let edit = todoList.value.filter((todo)=>todo.id == todoId)
+
+  if(edit[0].iscompleted == true){
+    todoList.value[todoPosition].iscompleted = false;
+  } else {
+    todoList.value[todoPosition].iscompleted = true;
+  }
+  
+  const res = await fetch("http://localhost:8000/api/posts/"+todoId+"/iscompleted", {
       method: "PUT",
       headers: {
           "Content-type": "application/json"
       },
-      body: JSON.stringify({"value":newVal})
+      body: JSON.stringify({"value":todoList.value[todoPosition].iscompleted})
   })
 }
 
-const toggleEditTodo = async(todoPosition) => {
-  todoList.value[todoPosition].isEditing = !todoList.value[todoPosition].isEditing;
-  let newVal = todoList.value[todoPosition].isEditing;
-  const res = await fetch("http://localhost:8000/api/posts/"+todoPosition+"/isEditing", {
+const toggleEditTodo = async(todoId,todoPosition) => {
+  let edit = todoList.value.filter((todo)=>todo.id == todoId)
+  
+  if(edit[0].isediting == true){
+    todoList.value[todoPosition].isediting = false;
+  } else {
+    todoList.value[todoPosition].isediting = true;
+  }
+  console.log(todoList.value[todoPosition]);
+  const res = await fetch("http://localhost:8000/api/posts/"+todoId+"/isediting", {
       method: "PUT",
       headers: {
           "Content-type": "application/json"
       },
-      body: JSON.stringify({"value":newVal})
+      body: JSON.stringify({"value":todoList.value[todoPosition].isediting})
   })
 
 }
 
-const updateText = async(todoText,todoPosition) => {
+const updateText = async(todoText,todoId,todoPosition) => {
   todoList.value[todoPosition].todo = todoText;
-  console.log(todoText);
-  console.log(todoPosition);
-  const res = await fetch("http://localhost:8000/api/posts/"+todoPosition+"/text", {
+
+  const res = await fetch("http://localhost:8000/api/posts/"+todoId+"/text", {
       method: "PUT",
       headers: {
           "Content-type": "application/json"
@@ -101,7 +123,6 @@ const updateText = async(todoText,todoPosition) => {
 
 
 const updateTodo = (todoVal, todoPosition) => {
-  console.log(todoPosition);
   todoList.value[todoPosition].todo = todoVal;
 }
 
@@ -120,10 +141,11 @@ const deleteTodo = async(todoId) => {
 
 <template>
   <main>
-    <h1>Create Todo</h1>
+    <p class="underline">Create Todo</p>
     <TodoCreator @create-todo="createTodo"/>
     <ul class="todo-list">
       <TodoItem 
+        :key="todo.id"
         v-for="(todo, index) in todoList" 
         :todo="todo" 
         :index="index"
@@ -152,10 +174,6 @@ main {
   margin: 0 auto;
   padding: 40px 16px;
 
-  h1 {
-    margin-bottom: 16px;
-    text-align: center;
-  }
 
   .todo-list {
     display: flex;
